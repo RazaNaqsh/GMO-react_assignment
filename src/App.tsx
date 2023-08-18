@@ -1,7 +1,15 @@
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+
+import { Routes, Route } from "react-router-dom";
+
 function App() {
   return (
     <>
-      <h1 className="text-3xl">Hello world!</h1>
+      <Navbar />
+      <Routes>
+        <Route index element={<Home />} />
+      </Routes>
     </>
   );
 }
