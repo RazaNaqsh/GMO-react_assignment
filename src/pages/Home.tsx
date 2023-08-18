@@ -26,8 +26,14 @@ const Home = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem("userDetails", JSON.stringify(formData));
-    navigate("/");
+    if (
+      formData.email !== "" &&
+      formData.name !== "" &&
+      formData.phoneNumber !== ""
+    ) {
+      localStorage.setItem("userDetails", JSON.stringify(formData));
+    }
+    navigate("/data");
   };
 
   return (
@@ -36,37 +42,34 @@ const Home = () => {
         <h2 className="text-2xl font-semibold mb-4">Fill out the form:</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="block mb-1 text-sm font-medium">Name:</label>
+            <label className="block mb-1 text-sm font-medium">Name:*</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              required
               className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-3">
             <label className="block mb-1 text-sm font-medium">
-              Phone Number:
+              Phone Number:*
             </label>
             <input
               type="tel"
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleChange}
-              required
               className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-3">
-            <label className="block mb-1 text-sm font-medium">Email:</label>
+            <label className="block mb-1 text-sm font-medium">Email:*</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required
               className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
             />
           </div>
