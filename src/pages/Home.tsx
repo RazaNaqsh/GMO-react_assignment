@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface FormData {
@@ -8,6 +8,10 @@ interface FormData {
 }
 
 const Home = () => {
+  useEffect(() => {
+    localStorage.removeItem("userDetails");
+  }, []);
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<FormData>({
