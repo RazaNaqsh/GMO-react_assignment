@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -17,8 +17,10 @@ const data = [
 ];
 
 const DeptList = () => {
-  const [expanded, setExpanded] = React.useState<string[]>([]);
-  const [selected, setSelected] = React.useState<string[]>([]);
+  const [expanded, setExpanded] = useState<string[]>(
+    data.map((dept) => dept.department) // Initialize with all department names
+  );
+  const [selected, setSelected] = useState<string[]>([]);
 
   const toggleExpand = (department: string) => {
     if (expanded.includes(department)) {
@@ -52,7 +54,7 @@ const DeptList = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     data.forEach((deptData) => {
       const subDeps = deptData.sub_departments;
       const allSubDepsSelected = subDeps.every((subDept) =>
