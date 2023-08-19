@@ -2,103 +2,106 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-const data = {
-  department: "customer_service",
-  sub_departments: ["support", "customer_success"],
-};
-const data2 = {
-  department: "design",
-  sub_departments: ["graphic_design", "product_design", "web_design"],
-};
+const data = [
+  {
+    department: "customer_service",
+    sub_departments: ["support", "customer_success"],
+  },
+  {
+    department: "design",
+    sub_departments: ["graphic_design", "product_design", "web_design"],
+  },
+];
 
 const DeptList = () => {
-  const [checked, setChecked] = React.useState([false, false]);
-  const [checked2, setChecked2] = React.useState([false, false, false]);
+  const [expanded, setExpanded] = React.useState<string[]>([]);
+  const [selected, setSelected] = React.useState<string[]>([]);
 
-  const handleParentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([event.target.checked, event.target.checked]);
-  };
-  const handleParentChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked2([
-      event.target.checked,
-      event.target.checked,
-      event.target.checked,
-    ]);
+  const toggleExpand = (department: string) => {
+    if (expanded.includes(department)) {
+      setExpanded(expanded.filter((dep) => dep !== department));
+    } else {
+      setExpanded([...expanded, department]);
+    }
   };
 
-  const handleChildChange =
-    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newChecked = [...checked];
-      newChecked[index] = event.target.checked;
-      setChecked(newChecked);
-    };
-  const handleChildChange2 =
-    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newChecked = [...checked2];
-      newChecked[index] = event.target.checked;
-      setChecked2(newChecked);
-    };
+  const toggleSelect = (department: string) => {
+    if (selected.includes(department)) {
+      setSelected(selected.filter((dep) => dep !== department));
+    } else {
+      setSelected([...selected, department]);
+    }
+  };
 
-  const children = (
-    <Box sx={{ display: "flex", flexDirection: "column", ml: 3 }}>
-      {data.sub_departments.map((subDept, index) => (
-        <FormControlLabel
-          key={subDept}
-          label={subDept}
-          control={
-            <Checkbox
-              checked={checked[index]}
-              onChange={handleChildChange(index)}
-            />
-          }
-        />
-      ))}
-    </Box>
-  );
-  const children2 = (
-    <Box sx={{ display: "flex", flexDirection: "column", ml: 3 }}>
-      {data2.sub_departments.map((subDept, index) => (
-        <FormControlLabel
-          key={subDept}
-          label={subDept}
-          control={
-            <Checkbox
-              checked={checked2[index]}
-              onChange={handleChildChange2(index)}
-            />
-          }
-        />
-      ))}
-    </Box>
-  );
+  const isExpanded = (department: string) => expanded.includes(department);
+  const isSelected = (name: string) => selected.includes(name);
+
+  const handleParentChange = (department: string) => {
+    const subDeps =
+      data.find((item) => item.department === department)?.sub_departments ||
+      [];
+    if (isSelected(department)) {
+      setSelected(
+        selected.filter((dep) => dep !== department && !subDeps.includes(dep))
+      );
+    } else {
+      setSelected([...selected, department, ...subDeps]);
+    }
+  };
+
+  React.useEffect(() => {
+    data.forEach((deptData) => {
+      const subDeps = deptData.sub_departments;
+      const allSubDepsSelected = subDeps.every((subDept) =>
+        isSelected(subDept)
+      );
+      if (allSubDepsSelected && !isSelected(deptData.department)) {
+        toggleSelect(deptData.department);
+      } else if (!allSubDepsSelected && isSelected(deptData.department)) {
+        toggleSelect(deptData.department);
+      }
+    });
+  }, [selected]);
 
   return (
     <div className="p-4 border rounded-lg shadow-md w-[50vw] bg-white">
-      <FormControlLabel
-        label={data.department}
-        control={
+      <h1 className="text-xl text-center font-semibold mb-4">
+        Department List
+      </h1>
+      {data.map((deptData) => (
+        <div key={deptData.department} className="flex items-center">
           <Checkbox
-            checked={checked[0] && checked[1]}
-            indeterminate={checked[0] !== checked[1]}
-            onChange={handleParentChange}
+            checked={isSelected(deptData.department)}
+            onChange={() => handleParentChange(deptData.department)}
           />
-        }
-      />
-      {children}
-      <FormControlLabel
-        label={data2.department}
-        control={
           <Checkbox
-            checked={checked2[0] && checked2[1] && checked2[2]}
-            indeterminate={
-              checked2[0] !== checked2[1] || checked2[0] !== checked2[2]
-            }
-            onChange={handleParentChange2}
+            checked={isExpanded(deptData.department)}
+            onChange={() => toggleExpand(deptData.department)}
+            icon={<ChevronRightIcon />}
+            checkedIcon={<ExpandMoreIcon />}
           />
-        }
-      />
-      {children2}
+          <span className="font-semibold">{deptData.department}</span>
+          {isExpanded(deptData.department) && (
+            <Box sx={{ display: "flex", flexDirection: "column", ml: 3 }}>
+              {deptData.sub_departments.map((subDept) => (
+                <FormControlLabel
+                  key={subDept}
+                  label={subDept}
+                  control={
+                    <Checkbox
+                      checked={isSelected(subDept)}
+                      onChange={() => toggleSelect(subDept)}
+                    />
+                  }
+                />
+              ))}
+            </Box>
+          )}
+        </div>
+      ))}
     </div>
   );
 };

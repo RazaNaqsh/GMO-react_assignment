@@ -36,7 +36,9 @@ const Grid = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-semibold mb-4">Posts</h1>
+      <h1 className="text-xl text-center font-semibold mb-4">
+        Fetch Data from Api and display in tabular form
+      </h1>
       <div className="h-[400px] w-full border rounded-lg shadow-lg bg-white">
         <DataGrid
           rows={posts}
