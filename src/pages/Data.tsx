@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Grid from "../components/Grid";
@@ -6,9 +6,7 @@ import DeptList from "../components/DeptList";
 
 const Data = () => {
   const navigate = useNavigate();
-  const [userDetails, setUserDetails] = useState(
-    JSON.parse(localStorage.getItem("userDetails") || "null")
-  );
+  const userDetails = JSON.parse(localStorage.getItem("userDetails") || "null");
 
   useEffect(() => {
     if (!userDetails) {
