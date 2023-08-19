@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Grid from "../components/Grid";
+import DeptList from "../components/DeptList";
 
 const Data = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Data = () => {
   return (
     <div className="flex flex-col items-center  h-[90vh]">
       <Grid />
+      <DeptList />
     </div>
   );
 };
